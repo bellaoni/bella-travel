@@ -22,12 +22,18 @@
 <body>
 
 <header class="hero">
-  <div class="hero-mark" aria-hidden="true"></div>
+  <div class="hero-mark" aria-hidden="true">✈️</div>
   <h1>Bella Travel</h1>
   <p class="tagline">나의 여행 다이어리 아카이브</p>
 </header>
 
-<section class="stats-strip" id="statsStrip"></section>
+<section class="stats-strip" id="statsStrip">
+  <div class="stat-popover" id="statPopover" hidden>
+    <p class="popover-title" id="popoverTitle"></p>
+    <ul class="popover-list" id="popoverList"></ul>
+  </div>
+</section>
+<div class="popover-backdrop" id="popoverBackdrop" hidden></div>
 
 <nav class="year-filter" id="yearFilter"></nav>
 
@@ -40,6 +46,22 @@
     <input type="checkbox" id="darkModeToggle">
     <span class="switch-track" aria-hidden="true"></span>
   </label>
+</div>
+
+<div class="modal-overlay" id="countModalOverlay" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="countModalTitle">
+    <button class="modal-close" id="countModalClose" type="button" aria-label="닫기">✕</button>
+    <h2 class="modal-title" id="countModalTitle">🧳 여행 횟수</h2>
+    <div class="modal-content" id="countModalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="daysModalOverlay" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="daysModalTitle">
+    <button class="modal-close" id="daysModalClose" type="button" aria-label="닫기">✕</button>
+    <h2 class="modal-title" id="daysModalTitle">📅 총 여행일수</h2>
+    <div class="modal-content" id="daysModalContent"></div>
+  </div>
 </div>
 
 <script src="trips-registry.js"></script>
