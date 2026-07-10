@@ -1,0 +1,17 @@
+{
+  "name": "Bella Travel",
+  "short_name": "Bella Travel",
+  "description": "나의 여행 다이어리 아카이브 - 여행 목록, 통계, 연도별 정렬",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8F1E7",
+  "theme_color": "#3D5A6C",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

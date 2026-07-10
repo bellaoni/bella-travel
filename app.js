@@ -13,6 +13,14 @@
   };
   function countryFlag(country) { return COUNTRY_FLAG[country] || "🌍"; }
 
+  // 여행 제목/도시명 등 registry에서 온 문자열을 innerHTML에 그대로 꽂기 전에 이스케이프.
+  // (특수문자가 포함된 데이터를 넣어도 마크업이 깨지지 않도록 하는 안전장치)
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, (ch) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+  }
+
   // 계절 판별: 3~5월 봄 / 6~8월 여름 / 9~11월 가을 / 12,1,2월 겨울
   // (여행 시작일 기준. 월을 넘겨서 진행되는 여행은 시작 계절에 전체 일수를 귀속시키는 근사치)
   const SEASON_META = {
@@ -72,7 +80,7 @@
       card.setAttribute("tabindex", "0");
       card.innerHTML = `<span class="num">${s.num}</span><span class="label">${s.label}</span>`;
 
-      const handleActivate = () => openStatModalByKind(s.kind, s.label, s.items);
+      const handleActivate = () => openStatModalByKind(s.kind, s.items);
       card.addEventListener("click", handleActivate);
       card.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleActivate(); }
@@ -88,14 +96,21 @@
   const statModalTitle = document.getElementById("statModalTitle");
   const statModalContent = document.getElementById("statModalContent");
   const statModalClose = document.getElementById("statModalClose");
+  let lastFocusedEl = null;
 
   function openStatModal(title, contentHtml) {
+    lastFocusedEl = document.activeElement;
     statModalTitle.textContent = title;
     statModalContent.innerHTML = contentHtml;
     statModalOverlay.hidden = false;
+    statModalClose.focus(); // 모달이 열리면 포커스를 닫기 버튼으로 이동 (키보드/스크린리더 사용성)
   }
   function closeStatModal() {
     statModalOverlay.hidden = true;
+    if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
+      lastFocusedEl.focus(); // 모달을 열기 전 포커스가 있던 요소로 되돌림
+    }
+    lastFocusedEl = null;
   }
   function initStatModal() {
     statModalClose.addEventListener("click", closeStatModal);
@@ -107,21 +122,31 @@
     });
   }
 
-  function openStatModalByKind(kind, label, items) {
+  function openStatModalByKind(kind, items) {
     if (kind === "count") { openStatModal("🧳 여행 횟수", buildCountModalContent()); return; }
     if (kind === "days") { openStatModal("📅 총 여행일수", buildDaysModalContent()); return; }
     if (kind === "country") { openStatModal("🌏 방문국가", buildListModalContent(items, { flag: true })); return; }
     if (kind === "city") { openStatModal("🏙 방문도시", buildListModalContent(items, { flag: false })); return; }
   }
 
-  // 방문국가/방문도시: 여행횟수·총여행일수 모달과 동일한 "둥근 배지 목록" 디자인 재사용
+  // 방문국가/방문도시: 이름별 방문 횟수까지 함께 표시 (여행횟수 모달과 동일한 배지 목록 디자인)
   function buildListModalContent(items, opts) {
     if (!items || items.length === 0) {
       return `<p class="modal-empty">아직 등록된 항목이 없어요.</p>`;
     }
+    const countMap = new Map();
+    TRIPS.forEach(t => {
+      const keys = opts.flag ? [t.country] : t.cities;
+      keys.forEach(key => countMap.set(key, (countMap.get(key) || 0) + 1));
+    });
     return `
       <ul class="year-group-list">
-        ${items.map(item => `<li>${opts.flag ? countryFlag(item) + " " : ""}${item}</li>`).join("")}
+        ${items.map(item => `
+          <li>
+            <span>${opts.flag ? countryFlag(item) + " " : ""}${escapeHtml(item)}</span>
+            <span class="city-count">${countMap.get(item) || 0}회</span>
+          </li>
+        `).join("")}
       </ul>
     `;
   }
@@ -161,7 +186,7 @@
           <ul class="year-group-list">
             ${cityEntries.map(([label, info]) => `
               <li>
-                <span>${countryFlag(info.country)} ${label}</span>
+                <span>${countryFlag(info.country)} ${escapeHtml(label)}</span>
                 <span class="city-count">${info.count}회</span>
               </li>
             `).join("")}
@@ -262,14 +287,14 @@
     }
 
     listEl.innerHTML = filtered.map(t => `
-      <button class="trip-card" type="button" data-url="${t.url}">
+      <button class="trip-card" type="button" data-url="${escapeHtml(t.url)}">
         <span class="trip-emoji" aria-hidden="true">${t.emoji || "✈️"}</span>
         <span class="trip-info">
-          <h3>${t.title}</h3>
+          <h3>${escapeHtml(t.title)}</h3>
           <span class="trip-meta">
             <span>${formatDateRange(t)}</span>
             <span>·</span>
-            <span>${t.country} ${t.cities.join(", ")}</span>
+            <span>${escapeHtml(t.country)} ${escapeHtml(t.cities.join(", "))}</span>
             <span>·</span>
             <span>${daysBetween(t.startDate, t.endDate)}일</span>
           </span>
