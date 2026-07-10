@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bella Travel</title>
+<meta name="theme-color" id="themeColorMeta" content="#3D5A6C">
+<script>
+(function () {
+  try {
+    if (localStorage.getItem("bella-travel-theme") === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  } catch (e) {}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-mark" aria-hidden="true"></div>
+  <h1>Bella Travel</h1>
+  <p class="tagline">나의 여행 다이어리 아카이브</p>
+</header>
+
+<section class="stats-strip" id="statsStrip"></section>
+
+<nav class="year-filter" id="yearFilter"></nav>
+
+<p class="trip-section-title" id="listTitle">여행 목록</p>
+<div class="trip-list" id="tripList"></div>
+
+<div class="settings-row">
+  <span>다크 모드</span>
+  <label class="switch">
+    <input type="checkbox" id="darkModeToggle">
+    <span class="switch-track" aria-hidden="true"></span>
+  </label>
+</div>
+
+<script src="trips-registry.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
