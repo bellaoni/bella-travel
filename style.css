@@ -144,63 +144,6 @@ button { font-family: inherit; cursor: pointer; }
   display: block;
 }
 
-/* ---------- Stat popover ---------- */
-.popover-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 30;
-  background: transparent;
-}
-.stat-popover {
-  position: absolute;
-  z-index: 31;
-  top: 0;
-  left: 0;
-  min-width: 150px;
-  max-width: 220px;
-  max-height: 240px;
-  overflow-y: auto;
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 12px 14px;
-  box-shadow: 0 10px 28px rgba(46, 42, 38, 0.18);
-}
-.stat-popover::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: var(--arrow-left, 24px);
-  width: 12px;
-  height: 12px;
-  background: var(--paper-raised);
-  border-left: 1px solid var(--line);
-  border-top: 1px solid var(--line);
-  transform: rotate(45deg);
-}
-.popover-title {
-  margin: 0 0 8px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--pink-deep);
-  letter-spacing: 0.06em;
-}
-.popover-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.popover-list li {
-  font-size: 13.5px;
-  color: var(--ink);
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--line);
-}
-.popover-list li:last-child { border-bottom: none; padding-bottom: 0; }
-
 /* ---------- Year filter ---------- */
 .year-filter {
   display: flex;
@@ -420,6 +363,7 @@ button { font-family: inherit; cursor: pointer; }
   gap: 4px;
 }
 .stat-bar-track {
+  display: block;
   flex: 1;
   height: 10px;
   background: var(--line);
@@ -427,7 +371,9 @@ button { font-family: inherit; cursor: pointer; }
   overflow: hidden;
 }
 .stat-bar-fill {
+  display: block;
   height: 100%;
+  min-width: 2px;
   border-radius: 999px;
   background: var(--indigo);
   transition: width 0.3s ease;

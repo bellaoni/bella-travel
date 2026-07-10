@@ -46,7 +46,7 @@
     return `${tripYear(trip)}.${s} – ${e}`;
   }
 
-  // ---------------- 통계 ----------------
+  // ---------------- 통계 카드 ----------------
   function renderStats() {
     const tripCount = TRIPS.length;
     const countryList = Array.from(new Set(TRIPS.map(t => t.country))).sort((a, b) => a.localeCompare(b, "ko"));
@@ -61,8 +61,7 @@
     ];
 
     const strip = document.getElementById("statsStrip");
-    // 팝오버 요소는 유지한 채 카드만 다시 그림
-    strip.querySelectorAll(".stat-card").forEach(el => el.remove());
+    strip.innerHTML = "";
 
     stats.forEach(s => {
       const card = document.createElement("div");
@@ -73,11 +72,7 @@
       card.setAttribute("tabindex", "0");
       card.innerHTML = `<span class="num">${s.num}</span><span class="label">${s.label}</span>`;
 
-      const handleActivate = () => {
-        if (s.kind === "count") { openCountModal(); }
-        else if (s.kind === "days") { openDaysModal(); }
-        else { togglePopover(card, s.label, s.items); }
-      };
+      const handleActivate = () => openStatModalByKind(s.kind, s.label, s.items);
       card.addEventListener("click", handleActivate);
       card.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleActivate(); }
@@ -86,77 +81,57 @@
     });
   }
 
-  // ---------------- 국가/도시 팝오버 ----------------
-  const popover = document.getElementById("statPopover");
-  const popoverTitle = document.getElementById("popoverTitle");
-  const popoverList = document.getElementById("popoverList");
-  const popoverBackdrop = document.getElementById("popoverBackdrop");
-  let activeCard = null;
+  // ---------------- 공용 통계 모달 ----------------
+  // 여행횟수 / 방문국가 / 방문도시 / 총여행일수 4개 카드가 전부 이 모달 하나를 공유한다.
+  // 콘텐츠만 바뀌기 때문에 네 가지 통계가 항상 동일한 디자인/동작으로 유지된다.
+  const statModalOverlay = document.getElementById("statModalOverlay");
+  const statModalTitle = document.getElementById("statModalTitle");
+  const statModalContent = document.getElementById("statModalContent");
+  const statModalClose = document.getElementById("statModalClose");
 
-  function positionPopover(cardEl) {
-    const container = document.getElementById("statsStrip");
-    const containerRect = container.getBoundingClientRect();
-    const cardRect = cardEl.getBoundingClientRect();
-
-    const top = cardRect.bottom - containerRect.top + 10;
-    const cardCenterX = cardRect.left + cardRect.width / 2 - containerRect.left;
-    const popoverWidth = popover.offsetWidth;
-
-    let left = cardCenterX - popoverWidth / 2;
-    left = Math.max(8, Math.min(left, containerRect.width - popoverWidth - 8));
-
-    popover.style.top = `${top}px`;
-    popover.style.left = `${left}px`;
-    popover.style.setProperty("--arrow-left", `${cardCenterX - left - 6}px`);
+  function openStatModal(title, contentHtml) {
+    statModalTitle.textContent = title;
+    statModalContent.innerHTML = contentHtml;
+    statModalOverlay.hidden = false;
+  }
+  function closeStatModal() {
+    statModalOverlay.hidden = true;
+  }
+  function initStatModal() {
+    statModalClose.addEventListener("click", closeStatModal);
+    statModalOverlay.addEventListener("click", (e) => {
+      if (e.target === statModalOverlay) closeStatModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !statModalOverlay.hidden) closeStatModal();
+    });
   }
 
-  function openPopover(cardEl, title, items) {
-    popoverTitle.textContent = title;
-    popoverList.innerHTML = items.map(item => `<li>${item}</li>`).join("");
-    popover.hidden = false;
-    popoverBackdrop.hidden = false;
-    positionPopover(cardEl); // 팝오버가 보인 뒤(width 측정 가능) 위치 계산
-    cardEl.classList.add("is-active");
-    activeCard = cardEl;
+  function openStatModalByKind(kind, label, items) {
+    if (kind === "count") { openStatModal("🧳 여행 횟수", buildCountModalContent()); return; }
+    if (kind === "days") { openStatModal("📅 총 여행일수", buildDaysModalContent()); return; }
+    if (kind === "country") { openStatModal("🌏 방문국가", buildListModalContent(items, { flag: true })); return; }
+    if (kind === "city") { openStatModal("🏙 방문도시", buildListModalContent(items, { flag: false })); return; }
   }
 
-  function closePopover() {
-    popover.hidden = true;
-    popoverBackdrop.hidden = true;
-    if (activeCard) activeCard.classList.remove("is-active");
-    activeCard = null;
+  // 방문국가/방문도시: 여행횟수·총여행일수 모달과 동일한 "둥근 배지 목록" 디자인 재사용
+  function buildListModalContent(items, opts) {
+    if (!items || items.length === 0) {
+      return `<p class="modal-empty">아직 등록된 항목이 없어요.</p>`;
+    }
+    return `
+      <ul class="year-group-list">
+        ${items.map(item => `<li>${opts.flag ? countryFlag(item) + " " : ""}${item}</li>`).join("")}
+      </ul>
+    `;
   }
 
-  function togglePopover(cardEl, title, items) {
-    if (activeCard === cardEl) { closePopover(); return; }
-    openPopover(cardEl, title, items);
-  }
-
-  popoverBackdrop.addEventListener("click", closePopover);
-  window.addEventListener("resize", () => { if (activeCard) positionPopover(activeCard); });
-
-  // ---------------- 여행 횟수 / 총 여행일수 모달 ----------------
-  const countModalOverlay = document.getElementById("countModalOverlay");
-  const countModalContent = document.getElementById("countModalContent");
-  const daysModalOverlay = document.getElementById("daysModalOverlay");
-  const daysModalContent = document.getElementById("daysModalContent");
-
-  function openModal(overlayEl) { overlayEl.hidden = false; }
-  function closeModal(overlayEl) { overlayEl.hidden = true; }
-  function closeAllOverlays() {
-    closePopover();
-    closeModal(countModalOverlay);
-    closeModal(daysModalOverlay);
-  }
-
-  function openCountModal() {
+  // 여행 횟수: 연도별(최신순) 그룹 + 그룹 내 방문 도시별 횟수
+  function buildCountModalContent() {
     if (TRIPS.length === 0) {
-      countModalContent.innerHTML = `<p class="modal-empty">아직 등록된 여행이 없어요.</p>`;
-      openModal(countModalOverlay);
-      return;
+      return `<p class="modal-empty">아직 등록된 여행이 없어요.</p>`;
     }
 
-    // 연도별 그룹화 (최신 연도 먼저)
     const byYear = new Map();
     TRIPS.forEach(t => {
       const y = tripYear(t);
@@ -165,10 +140,9 @@
     });
     const years = Array.from(byYear.keys()).sort((a, b) => b - a);
 
-    countModalContent.innerHTML = years.map(year => {
+    return years.map(year => {
       const yearTrips = byYear.get(year);
 
-      // 같은 연도 내, 방문 도시(묶음)별 횟수 집계
       const cityMap = new Map(); // label -> { count, country }
       yearTrips.forEach(t => {
         const label = t.cities.join(" · ");
@@ -195,18 +169,14 @@
         </div>
       `;
     }).join("");
-
-    openModal(countModalOverlay);
   }
 
-  function openDaysModal() {
+  // 총 여행일수: 연도별 + 계절별 CSS 막대그래프 (섹션별로 최댓값 100% 기준)
+  function buildDaysModalContent() {
     if (TRIPS.length === 0) {
-      daysModalContent.innerHTML = `<p class="modal-empty">아직 등록된 여행이 없어요.</p>`;
-      openModal(daysModalOverlay);
-      return;
+      return `<p class="modal-empty">아직 등록된 여행이 없어요.</p>`;
     }
 
-    // 연도별 여행일수 합계 (최신 연도 먼저)
     const yearDays = new Map();
     TRIPS.forEach(t => {
       const y = tripYear(t);
@@ -228,7 +198,6 @@
       `;
     }).join("");
 
-    // 계절별 여행일수 합계 (여행 시작일 기준 계절에 전체 일수 귀속)
     const seasonDays = { spring: 0, summer: 0, fall: 0, winter: 0 };
     TRIPS.forEach(t => {
       seasonDays[seasonOf(t.startDate)] += daysBetween(t.startDate, t.endDate);
@@ -249,22 +218,12 @@
       `;
     }).join("");
 
-    daysModalContent.innerHTML = `
+    return `
       <p class="modal-subsection-title">연도별</p>
       <div class="stat-bar-list">${yearBarsHtml}</div>
       <p class="modal-subsection-title">계절별</p>
       <div class="stat-bar-list">${seasonBarsHtml}</div>
     `;
-
-    openModal(daysModalOverlay);
-  }
-
-  function initStatsModal() {
-    document.getElementById("countModalClose").addEventListener("click", () => closeModal(countModalOverlay));
-    document.getElementById("daysModalClose").addEventListener("click", () => closeModal(daysModalOverlay));
-    countModalOverlay.addEventListener("click", (e) => { if (e.target === countModalOverlay) closeModal(countModalOverlay); });
-    daysModalOverlay.addEventListener("click", (e) => { if (e.target === daysModalOverlay) closeModal(daysModalOverlay); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAllOverlays(); });
   }
 
   // ---------------- 연도 필터 ----------------
@@ -322,9 +281,6 @@
     listEl.querySelectorAll(".trip-card").forEach(card => {
       card.addEventListener("click", () => {
         const url = card.dataset.url; // 절대경로, 예: "/fukuoka-trip/"
-        // 아카이브를 경유했다는 표시. 각 여행 PWA(다른 레포/사이트)는 이 파라미터를 보고
-        // sessionStorage에 기록한 뒤 홈 버튼을 띄운다. sessionStorage는 origin 단위라
-        // 같은 username.github.io 도메인이면 레포가 달라도 공유된다.
         location.href = url + (url.includes("?") ? "&" : "?") + "source=archive";
       });
     });
@@ -349,7 +305,7 @@
 
   // ---------------- 초기화 ----------------
   renderStats();
-  initStatsModal();
+  initStatModal();
   renderYearFilter();
   renderTripList();
 })();
