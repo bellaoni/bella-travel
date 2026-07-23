@@ -333,4 +333,43 @@
   initStatModal();
   renderYearFilter();
   renderTripList();
+
+  // ---------------- 서비스워커 업데이트 알림 ----------------
+  function showUpdateToast(reg) {
+    let toast = document.getElementById("swUpdateToast");
+    if (toast) { toast.hidden = false; return; }
+    toast = document.createElement("div");
+    toast.id = "swUpdateToast";
+    toast.className = "sw-update-toast";
+    toast.innerHTML = `<span>새 버전이 있어요</span><button type="button" id="swUpdateBtn">새로고침</button>`;
+    document.body.appendChild(toast);
+    toast.querySelector("#swUpdateBtn").addEventListener("click", () => {
+      if (reg.waiting) reg.waiting.postMessage({ type: "SKIP_WAITING" });
+      toast.hidden = true;
+    });
+  }
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").then((reg) => {
+        if (reg.waiting && navigator.serviceWorker.controller) showUpdateToast(reg);
+        reg.addEventListener("updatefound", () => {
+          const newWorker = reg.installing;
+          if (!newWorker) return;
+          newWorker.addEventListener("statechange", () => {
+            if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+              showUpdateToast(reg);
+            }
+          });
+        });
+      }).catch(() => {});
+
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (refreshing) return;
+        refreshing = true;
+        location.reload();
+      });
+    });
+  }
 })();

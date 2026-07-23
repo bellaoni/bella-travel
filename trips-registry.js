@@ -25,7 +25,7 @@ const TRIPS = [
     startDate: "2026-08-02",
     endDate: "2026-08-04",
     url: "/fukuoka-trip/",
-    emoji: "🌸",
+    emoji: "🍜",
     shared: true
   }
 ];

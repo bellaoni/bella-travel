@@ -1,4 +1,4 @@
-const CACHE_NAME = "bella-travel-v3";
+const CACHE_NAME = "bella-travel-v4";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -7,13 +7,23 @@ const APP_SHELL = [
   "./trips-registry.js",
   "./manifest.json",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./icon-192-maskable.png",
+  "./icon-512-maskable.png"
 ];
 
 self.addEventListener("install", (event) => {
+  // 바로 skipWaiting()하지 않고 "대기 중" 상태로 둔다.
+  // app.js가 감지해 사용자에게 새로고침 여부를 물어보고, 동의했을 때만 활성화된다.
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
   );
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener("activate", (event) => {
