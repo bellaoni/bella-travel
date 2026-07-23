@@ -24,10 +24,14 @@ GitHub Pages(Settings → Pages → main / root)로 올리면 됩니다.
 ## 새 여행 추가하는 법
 
 1. 새 여행은 `fukuoka-trip`을 복사해서 **새 레포**로 만듭니다 (예: `osaka-trip`).
-2. 그 레포 안 `data.js`(일정), `index.html`(제목), `manifest.json`을 새 여행 내용으로 바꿉니다.
-3. 그 레포의 `app.js` 맨 위 `ARCHIVE_URL`이 `/bella-travel/`로 되어 있는지 확인합니다 (기본값 그대로면 OK).
-4. 새 레포를 GitHub Pages로 배포합니다.
-5. 이 `bella-travel` 레포의 `trips-registry.js`에 새 여행 정보를 한 항목 추가합니다:
+2. `index.html` 맨 위 인라인 스크립트의 `window.TRIP_ID = "fukuoka-trip";`를 새 레포 이름(예: `"osaka-trip"`)으로 바꿉니다.
+   - IndexedDB 이름(db.js) · 테마/아코디언 localStorage 키 · 백업파일 식별자(app.js)가 전부 이 값 하나에서 자동으로 파생되므로, 이 한 줄만 바꾸면 같은 도메인의 다른 여행 앱과 데이터가 섞이지 않습니다. (이 줄을 빠뜨리면 두 앱이 같은 IndexedDB를 공유하게 되니 꼭 확인하세요.)
+3. 그 레포 안 `data.js`(일정), `index.html`(`<title>`/`<h1>`/apple-mobile-web-app-title), `manifest.json`(name/short_name/description)을 새 여행 내용으로 바꿉니다.
+   - ⚠️ `data.js`의 `GEO_COORDS`/`GEO_SEARCH_QUERY`는 반드시 비운 뒤 새로 채웁니다. 지우지 않으면 이전 여행의 장소 좌표가 죽은 코드로 계속 남습니다.
+   - ⚠️ `index.html`의 "공항 → 시내" 교통 카드는 다른 참고정보와 달리 `data.js`가 아니라 마크업에 직접 쓰여 있어서 (예: "후쿠오카 공항 → 하카타역") 반드시 손으로 새 여행 내용으로 바꿔야 합니다.
+4. 그 레포의 `app.js` 맨 위 `ARCHIVE_URL`이 `/bella-travel/`로 되어 있는지 확인합니다 (기본값 그대로면 OK).
+5. 새 레포를 GitHub Pages로 배포합니다.
+6. 이 `bella-travel` 레포의 `trips-registry.js`에 새 여행 정보를 한 항목 추가합니다:
 
 ```js
 {
@@ -43,7 +47,7 @@ GitHub Pages(Settings → Pages → main / root)로 올리면 됩니다.
 }
 ```
 
-6. `bella-travel` 레포에 이 파일만 다시 업로드하면 목록·통계·연도필터에 자동 반영됩니다.
+7. `bella-travel` 레포에 이 파일만 다시 업로드하면 목록·통계·연도필터에 자동 반영됩니다.
 
 ## 홈 버튼 동작 원리
 
