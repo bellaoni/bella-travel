@@ -298,6 +298,8 @@
             <span>·</span>
             <span>${daysBetween(t.startDate, t.endDate)}일</span>
           </span>
+          ${t.rating ? `<span class="trip-rating" aria-label="평점 ${t.rating}점">${"★".repeat(Math.max(0, Math.min(5, t.rating)))}${"☆".repeat(Math.max(0, 5 - Math.min(5, t.rating)))}</span>` : ""}
+          ${t.memo ? `<p class="trip-memo">${escapeHtml(t.memo)}</p>` : ""}
         </span>
         <span class="trip-arrow" aria-hidden="true">›</span>
       </button>
