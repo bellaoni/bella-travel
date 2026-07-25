@@ -233,6 +233,35 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: var(--radius-card);
 }
 
+.add-trip-btn {
+  margin: 4px 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-card);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.add-trip-btn:active { transform: scale(0.98); }
+.add-trip-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--tape);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
 /* ---------- Settings row (dark mode) ---------- */
 .settings-row {
   margin: 22px 16px 0;
