@@ -92,34 +92,15 @@
   // ---------------- 공용 통계 모달 ----------------
   // 여행횟수 / 방문국가 / 방문도시 / 총여행일수 4개 카드가 전부 이 모달 하나를 공유한다.
   // 콘텐츠만 바뀌기 때문에 네 가지 통계가 항상 동일한 디자인/동작으로 유지된다.
-  const statModalOverlay = document.getElementById("statModalOverlay");
+  // 열기/닫기(포커스 이동, backdrop 클릭, Escape)는 shared-core/popup.js(openCard/bindCardClose)에 위임.
+  const { openCard, bindCardClose } = SharedCore.popup;
   const statModalTitle = document.getElementById("statModalTitle");
   const statModalContent = document.getElementById("statModalContent");
-  const statModalClose = document.getElementById("statModalClose");
-  let lastFocusedEl = null;
 
   function openStatModal(title, contentHtml) {
-    lastFocusedEl = document.activeElement;
     statModalTitle.textContent = title;
     statModalContent.innerHTML = contentHtml;
-    statModalOverlay.hidden = false;
-    statModalClose.focus(); // 모달이 열리면 포커스를 닫기 버튼으로 이동 (키보드/스크린리더 사용성)
-  }
-  function closeStatModal() {
-    statModalOverlay.hidden = true;
-    if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
-      lastFocusedEl.focus(); // 모달을 열기 전 포커스가 있던 요소로 되돌림
-    }
-    lastFocusedEl = null;
-  }
-  function initStatModal() {
-    statModalClose.addEventListener("click", closeStatModal);
-    statModalOverlay.addEventListener("click", (e) => {
-      if (e.target === statModalOverlay) closeStatModal();
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !statModalOverlay.hidden) closeStatModal();
-    });
+    openCard("statModal");
   }
 
   function openStatModalByKind(kind, items) {
@@ -312,25 +293,13 @@
   }
 
   // ---------------- 다크모드 ----------------
+  // 토글 checked 동기화 + theme-color 메타 반영 + change 리스너 등록은 shared-core/theme.js(initThemeToggle)에 위임.
   const THEME_KEY = "bella-travel-theme";
-  function applyTheme(isDark) {
-    if (isDark) {
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      document.documentElement.removeAttribute("data-theme");
-    }
-    try { localStorage.setItem(THEME_KEY, isDark ? "dark" : "light"); } catch (e) {}
-    const meta = document.getElementById("themeColorMeta");
-    if (meta) meta.setAttribute("content", isDark ? "#1E1B18" : "#3D5A6C");
-  }
-  const darkModeToggle = document.getElementById("darkModeToggle");
-  darkModeToggle.checked = document.documentElement.getAttribute("data-theme") === "dark";
-  applyTheme(darkModeToggle.checked);
-  darkModeToggle.addEventListener("change", (e) => applyTheme(e.target.checked));
+  SharedCore.theme.initThemeToggle({ themeKey: THEME_KEY, toggleId: "darkModeToggle" });
 
   // ---------------- 초기화 ----------------
   renderStats();
-  initStatModal();
+  bindCardClose("statModal");
   renderYearFilter();
   renderTripList();
 

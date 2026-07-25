@@ -7,6 +7,8 @@ const APP_SHELL = [
   "./style.css",
   "./app.js",
   "./trips-registry.js",
+  "./shared-core/theme.js",
+  "./shared-core/popup.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
