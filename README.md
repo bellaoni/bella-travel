@@ -18,8 +18,19 @@ username.github.io/osaka-trip/       ← 별도 레포. 동행자 공유용
 
 ## 배포
 
-이 레포 폴더(`index.html`, `style.css`, `app.js`, `trips-registry.js`) 그대로
-GitHub Pages(Settings → Pages → main / root)로 올리면 됩니다.
+이 레포는 **GitHub Actions**로 자동 배포됩니다(`.github/workflows/deploy.yml`, fukuoka-trip과 동일 방식).
+main 브랜치에 커밋하면 자동으로 빌드·배포되고, `sw.js`의 캐시 버전도 커밋마다 자동 갱신되니
+버전 숫자를 직접 손댈 필요는 없습니다.
+
+**최초 1회만 설정**
+1. **Settings → Pages → Build and deployment → Source**를 **GitHub Actions**로 설정
+   (기존 "Deploy from a branch(main/root)" 방식이었다면 이 설정으로 바꿔야 함)
+2. 전환 직후 1~2회는 기존 수동 배포 결과와 비교해 정상 동작을 확인한 뒤, 그 다음부터는
+   완전히 Actions 배포만 사용합니다 (급격한 전환 지양).
+
+**파일 올릴 때마다(수정 반영)**: 폴더(`index.html`, `style.css`, `app.js`, `trips-registry.js`,
+`manifest.json`, `sw.js`, `icon-*.png`, `.github/workflows/deploy.yml`) 그대로 커밋 → **Actions** 탭에서
+배포 완료 확인 (보통 1~2분).
 
 ## 새 여행 추가하는 법
 
@@ -42,8 +53,7 @@ GitHub Pages(Settings → Pages → main / root)로 올리면 됩니다.
   startDate: "2027-03-10",
   endDate: "2027-03-13",
   url: "/osaka-trip/",       // 반드시 절대경로("/레포명/")
-  emoji: "🍡",
-  shared: true
+  emoji: "🍡"
 }
 ```
 

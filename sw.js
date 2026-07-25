@@ -1,4 +1,6 @@
-const CACHE_NAME = "bella-travel-v4";
+// __CACHE_VERSION__은 배포 시 GitHub Actions(.github/workflows/deploy.yml)가
+// 커밋 SHA 짧은 7자리로 자동 치환한다(fukuoka-trip과 동일 방식). 수동 증가 불필요.
+const CACHE_NAME = "bella-travel-v__CACHE_VERSION__";
 const APP_SHELL = [
   "./",
   "./index.html",

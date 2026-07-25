@@ -14,9 +14,6 @@
 //  startDate / endDate : 'YYYY-MM-DD' (여행일수 자동 계산에 사용)
 //  url       : 해당 여행 PWA 절대경로. 예) "/fukuoka-trip/"
 //  emoji     : 카드 썸네일에 쓸 이모지
-//  shared    : 동행자와 공유했는지 여부 (표시용, 통계에는 미사용)
-//  rating    : (선택) 여행 후 평점, 1~5 정수. 없으면 카드에 표시 안 함
-//  memo      : (선택) 여행 후 짧은 회고 메모. 없으면 카드에 표시 안 함
 
 const TRIPS = [
   {
@@ -27,7 +24,6 @@ const TRIPS = [
     startDate: "2026-08-02",
     endDate: "2026-08-04",
     url: "/fukuoka-trip/",
-    emoji: "🌸",
-    shared: true
+    emoji: "🌸"
   }
 ];
