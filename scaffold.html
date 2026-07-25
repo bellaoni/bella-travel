@@ -20,7 +20,8 @@
   input:focus { outline:2px solid var(--accent); outline-offset:1px; }
   .row2 { display:flex; gap:12px; }
   .row2 > div { flex:1 1 0; min-width:0; }
-  input[type="date"] { padding-right:8px; }
+  .row2 > div.date-field { overflow:hidden; }
+  input[type="date"] { padding-right:8px; max-width:100%; }
   button#genBtn { margin-top:28px; width:100%; padding:14px; background:var(--accent); color:#fff;
           border:none; border-radius:12px; font-size:16px; font-weight:700; }
   button#genBtn:active { opacity:0.85; }
@@ -71,11 +72,11 @@
     </div>
 
     <div class="row2">
-      <div>
+      <div class="date-field">
         <label>여행 시작일</label>
         <input id="startDate" type="date" required>
       </div>
-      <div>
+      <div class="date-field">
         <label>여행 종료일</label>
         <input id="endDate" type="date" required>
       </div>
