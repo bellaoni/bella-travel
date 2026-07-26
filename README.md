@@ -61,6 +61,13 @@ main 브랜치에 커밋하면 자동으로 빌드·배포되고, `sw.js`의 캐
 
 7. `bella-travel` 레포에 이 파일만 다시 업로드하면 목록·통계·연도필터에 자동 반영됩니다.
 
+## shared-core 동기화
+
+`shared-core/`(popup.js, theme.js 등)는 레포마다 파일 복사본으로 존재하며, 자동 동기화 시스템은 없습니다.
+**`scaffold.html`(이 허브 레포 내)이 원본(정본)**이며, fukuoka-trip을 포함한 다른 모든 레포의 shared-core는
+생성 시점 정본의 스냅샷입니다. 정본이 갱신되면 이미 생성된 여행 레포에는 수동으로 반영해야 하며, 새 레포를
+만들기 전에는 각 레포의 shared-core와 정본 사이에 diff가 없는지 확인하는 것을 권장합니다.
+
 ## 홈 버튼 동작 원리
 
 - Bella Travel에서 여행 카드 클릭 → `해당레포URL/?source=archive`로 이동
