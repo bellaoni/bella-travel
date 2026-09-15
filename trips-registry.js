@@ -25,5 +25,15 @@ const TRIPS = [
     endDate: "2026-08-04",
     url: "/fukuoka-trip/",
     emoji: "🌸"
+  },
+  {
+    id: "osaka-trip",
+    title: "오사카 3박 4일",
+    country: "일본",
+    cities: ["오사카"],
+    startDate: "2026-09-21",
+    endDate: "2026-09-24",
+    url: "/osaka-trip/",
+    emoji: "💚"
   }
 ];
