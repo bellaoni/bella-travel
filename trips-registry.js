@@ -35,5 +35,15 @@ const TRIPS = [
     endDate: "2026-09-24",
     url: "/osaka-trip/",
     emoji: "💚"
-  }
+  },
+  {
+  id: "bali-trip",
+  title: "Key of Rich in Bali",
+  country: "인도네시아",
+  cities: ["발리"],
+  startDate: "2026-11-10",
+  endDate: "2026-11-14",
+  url: "/bali-trip/",
+  emoji: "🔑"
+}
 ];
