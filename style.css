@@ -10,7 +10,6 @@
   --pink: #E2949E;
   --pink-deep: #C97783;
   --moss: #8A9A6E;
-  --sight: #8C6FA0;
   --tape: #F2D399;
   --line: #E4D8C4;
   --shadow: 0 6px 18px rgba(46, 42, 38, 0.10);
@@ -31,16 +30,14 @@
   --pink: #D98C97;
   --pink-deep: #E7A3AC;
   --moss: #9CAE7E;
-  --sight: #BC9BCB;
   --tape: #C9A360;
   --line: #3A342D;
   --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-  --header-gradient-start: var(--paper); /* 다크모드에서는 그라데이션 없이 단색 */
+  --header-gradient-start: var(--paper);
   color-scheme: dark;
 }
 
 html, body { transition: background-color 0.2s ease, color 0.2s ease; }
-
 * { box-sizing: border-box; }
 
 html, body {
@@ -58,890 +55,381 @@ body {
     radial-gradient(circle at 12% 8%, rgba(226,148,158,0.10) 0, transparent 40%),
     radial-gradient(circle at 88% 20%, rgba(61,90,108,0.08) 0, transparent 45%);
   min-height: 100vh;
-  padding-bottom: calc(72px + var(--safe-bottom));
+  padding-bottom: calc(28px + var(--safe-bottom));
 }
 
 h1, h2, h3 { font-family: 'Shippori Mincho', serif; margin: 0; }
-
 button { font-family: inherit; cursor: pointer; }
 
-/* ---------- Header ---------- */
-.app-header {
-  padding: calc(18px + var(--safe-top)) 20px 16px;
+/* ---------- Hero ---------- */
+.hero {
+  padding: calc(28px + var(--safe-top)) 20px 22px;
   background: linear-gradient(180deg, var(--header-gradient-start) 0%, var(--paper) 100%);
   border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: 0;
-  z-index: 20;
+  text-align: center;
 }
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-}
-.eyebrow {
-  margin: 0 0 4px;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  color: var(--pink-deep);
-  font-weight: 700;
-}
-.title-block h1 {
-  font-size: 22px;
-  line-height: 1.35;
-  color: var(--indigo-deep);
-  font-weight: 700;
-}
-.home-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  border: 1px solid var(--line);
-  background: var(--paper-raised);
-  color: var(--indigo-deep);
-  font-size: 17px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow);
-  margin-right: 2px;
-}
-.home-btn:active { transform: scale(0.92); }
-
-.header-mark {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  flex-shrink: 0;
-  margin-top: 2px;
-  display: block;
-  object-fit: cover;
+.hero-mark {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
   transform: rotate(-4deg);
   box-shadow: var(--shadow);
 }
-
-.day-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  overflow-x: auto;
-}
-.day-tab {
-  flex: 1;
-  min-width: 0;
-  border: 1px solid var(--line);
-  background: var(--paper-raised);
-  border-radius: 12px 12px 4px 4px;
-  padding: 8px 6px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  color: var(--ink-soft);
-  transition: transform .15s ease, background .15s ease, color .15s ease;
-}
-.day-tab .day-num { font-family: 'Shippori Mincho', serif; font-size: 14px; font-weight: 700; }
-.day-tab .day-date { font-size: 11px; }
-.day-tab.active {
-  background: var(--indigo);
-  color: #fff;
-  border-color: var(--indigo);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
-/* ---------- Views ---------- */
-main { padding: 18px 16px 8px; max-width: 640px; margin: 0 auto; }
-.view { display: none; }
-.view.active { display: block; }
-
-/* ---------- Timeline / Scrapbook cards ---------- */
-.timeline { display: flex; flex-direction: column; gap: 14px; position: relative; }
-.timeline::before {
-  content: "";
-  position: absolute;
-  left: 27px;
-  top: 8px;
-  bottom: 8px;
-  width: 2px;
-  background: repeating-linear-gradient(180deg, var(--line) 0 6px, transparent 6px 11px);
-  z-index: 0;
-}
-
-.tl-item {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 10px;
-  align-items: start;
-  position: relative;
-  z-index: 1;
-}
-.tl-time-dot {
-  width: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 6px;
-}
-.tl-time-dot .dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--indigo);
-  border: 3px solid var(--paper);
-  box-shadow: 0 0 0 1px var(--line);
-}
-
-
-.tl-card {
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  padding: 14px 14px 12px;
-  box-shadow: var(--shadow);
-  position: relative;
-  text-align: left;
+.hero-mark img {
+  display: block;
   width: 100%;
-  color: var(--ink);
-  overflow: visible;
+  height: 100%;
+  object-fit: cover;
 }
-.tl-card::before {
-  /* washi tape */
-  content: "";
-  position: absolute;
-  top: -9px;
-  left: 18px;
-  width: 54px;
-  height: 20px;
-  background: var(--tape);
-  opacity: 0.85;
-  transform: rotate(-3deg);
-  border-radius: 2px;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.08);
-}
-.tl-card.tag-normal::before { background: var(--tape); opacity: .85; }
-.tl-card.tag-food::before { background: var(--pink); opacity: .8; }
-.tl-card.tag-shop::before { background: var(--sight); opacity: .55; }
-.tl-card.tag-sight::before { background: var(--moss); opacity: .8; }
-/* theme 태그: 정식 지원 태그(data.js 참고) */
-.tl-card.tag-theme::before { background: var(--indigo); opacity: .7; }
-
-.tl-card-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-.tl-card h3 {
-  font-size: 15.5px;
-  line-height: 1.4;
+.hero h1 {
+  font-size: 26px;
   color: var(--indigo-deep);
+  letter-spacing: 0.02em;
 }
-.tl-tag {
-  font-size: 10.5px;
-  color: var(--ink-soft);
-  background: rgba(61,90,108,0.08);
-  padding: 3px 8px;
-  border-radius: 20px;
-  white-space: nowrap;
-  align-self: flex-start;
-  margin-top: 2px;
-}
-.tl-card p.desc {
+.hero .tagline {
   margin: 6px 0 0;
   font-size: 13px;
   color: var(--ink-soft);
-  line-height: 1.5;
+  letter-spacing: 0.06em;
 }
-.tl-card .meta-row {
-  margin-top: 8px;
-  display: flex;
-  gap: 10px;
-  font-size: 11.5px;
-  color: var(--pink-deep);
-}
-.tl-card .meta-row span { display: inline-flex; align-items: center; gap: 3px; }
 
-/* ---------- Map view ---------- */
-.map-panel { display: flex; flex-direction: column; gap: 10px; }
-
-.map-day-filter { display: flex; gap: 8px; }
-.map-day-filter .day-tab { flex: 1; min-width: 0; padding: 7px 4px 8px; }
-.map-day-filter .day-tab .day-num { font-size: 12.5px; }
-
-.map-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 2px 2px 0; }
-.map-legend-item { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--ink-soft); }
-.map-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-
-.map-offline-bar { display: flex; align-items: center; gap: 8px; padding: 0 2px; }
-.map-offline-bar .hint-text { margin: 0; flex: 1; }
-
-.map-embed-wrap {
+/* ---------- Stats strip ---------- */
+.stats-strip {
   position: relative;
-  isolation: isolate; /* Leaflet 내부 z-index(컨트롤 최대 1000)가 모달/뷰어 위로 새는 것을 막는 독립 스태킹 컨텍스트 */
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  border: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 18px 16px 4px;
+}
+.stat-card {
   background: var(--paper-raised);
-  min-height: 55vh;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 6px;
+  text-align: center;
   box-shadow: var(--shadow);
 }
-#leafletMap { width: 100%; height: 55vh; background: var(--paper-raised); }
-#leafletMap.picking { cursor: crosshair; }
-
-/* 마커 가시성 개선(T11): 원형 점 → 핀(물방울) 모양, 크기 확대(14px→26px), 흰 테두리로 대비 강화 */
-.map-pin-wrap { background: transparent; border: none; }
-.map-pin {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50% 50% 50% 0;
-  transform: rotate(-45deg);
-  border: 3px solid var(--paper-raised);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
-  transition: transform .18s ease;
+.stat-card[data-clickable] {
+  cursor: pointer;
+  position: relative;
 }
-/* 일정 순서 번호(T13): 핀 자체는 -45deg 회전돼 있으므로 숫자만 반대로 돌려 똑바로 보이게 한다.
-   "전체" 탭에서는 여러 날짜 번호가 뒤섞여 보이므로, DAY를 선택했을 때(.day-selected)만 노출한다. */
-.map-pin-num {
-  display: none;
-  transform: rotate(45deg);
-  font-size: 11px;
+.stat-card[data-clickable]:active { transform: scale(0.96); }
+.stat-card[data-clickable] .num::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--pink-deep);
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.stat-card .num {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 1;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-.leaflet-container.day-selected .map-pin-num {
+  color: var(--indigo-deep);
   display: block;
 }
-/* 마커 선택 시 확대(T12): 상세 시트가 열려있는 동안 선택된 마커만 살짝 커진다 */
-.map-pin-wrap.selected .map-pin {
-  transform: rotate(-45deg) scale(1.3);
+.stat-card .label {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+  display: block;
 }
 
-/* 위치 찍기 안내 바 (지도 위 상단 오버레이) */
-.map-picker-bar {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  z-index: 600;
+/* ---------- Year filter ---------- */
+.year-filter {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   gap: 8px;
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 8px 10px;
-  font-size: 12.5px;
-  box-shadow: var(--shadow);
+  padding: 18px 16px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
-.map-picker-actions { display: flex; gap: 6px; flex-shrink: 0; }
-
-/* 마커 탭 시 나오는 하단 시트 */
-.map-bottom-sheet {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 550;
-  background: var(--paper-raised);
-  border-top: 1px solid var(--line);
-  border-radius: 18px 18px 0 0;
-  box-shadow: 0 -4px 16px rgba(46, 42, 38, 0.18);
-  padding: 14px 16px 16px;
-  transform: translateY(100%);
-  transition: transform .25s ease;
-}
-.map-bottom-sheet.open { transform: translateY(0); }
-.map-sheet-tape { position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 18px 18px 0 0; opacity: .85; }
-.map-sheet-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.map-sheet-time { font-size: 12px; color: var(--ink-soft); flex: 1; }
-.map-sheet-close { background: none; border: none; color: var(--ink-soft); font-size: 14px; padding: 4px; line-height: 1; }
-.map-sheet-title { margin: 2px 0 4px; font-size: 16px; }
-.map-sheet-desc { margin: 0 0 12px; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
-
-.map-pending {
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  padding: 14px;
-  box-shadow: var(--shadow);
-}
-.map-pending-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.map-pending-item { border-top: 1px dashed var(--line); padding-top: 10px; }
-.map-pending-item:first-child { border-top: none; padding-top: 0; }
-.map-pending-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13.5px; margin-bottom: 8px; }
-.map-pending-actions { display: flex; gap: 6px; flex-shrink: 0; }
-.map-pick-btn { width: 100%; }
-
-/* ---------- Booking (예약함) ---------- */
-.book-panel { display: flex; flex-direction: column; gap: 14px; }
-.book-card {
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  padding: 16px 14px 12px;
-  box-shadow: var(--shadow);
-  position: relative;
-}
-.book-card::before {
-  content: "";
-  position: absolute;
-  top: -9px;
-  right: 22px;
-  width: 54px;
-  height: 20px;
-  background: var(--indigo);
-  opacity: 0.55;
-  transform: rotate(3deg);
-  border-radius: 2px;
-}
-.book-card h3 { font-size: 15px; color: var(--indigo-deep); margin-bottom: 8px; }
-.book-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px dashed var(--line); }
-.book-row:last-of-type { border-bottom: none; }
-.book-row .k { color: var(--ink-soft); }
-.book-row .v { font-weight: 700; text-align: right; }
-
-/* ---------- Checklist ---------- */
-.checklist-panel { display: flex; flex-direction: column; gap: 14px; }
-.checklist-add { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-.checklist-add input {
-  flex: 1 1 160px;
-  min-width: 0;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--paper-raised);
-  color: var(--ink);
-  caret-color: var(--indigo);
-  font-family: inherit;
-  font-size: 14px;
-}
-.checklist-add input::placeholder { color: var(--ink-soft); opacity: 1; }
-.checklist-add select {
-  flex: 0 1 110px;
-  min-width: 0;
-  padding: 12px 10px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--paper-raised);
-  color: var(--ink);
-  font-family: inherit;
-  font-size: 14px;
-}
-.checklist-add button { flex-shrink: 0; }
-.checklist-filter { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
-.checklist-filter-btn {
+.year-filter::-webkit-scrollbar { display: none; }
+.year-chip {
   flex-shrink: 0;
-  padding: 6px 12px;
+  padding: 7px 14px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: var(--paper-raised);
   color: var(--ink-soft);
-  font-family: inherit;
-  font-size: 12px;
-  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
 }
-.checklist-filter-btn.active {
+.year-chip.active {
   background: var(--indigo);
   border-color: var(--indigo);
   color: #fff;
 }
-.checklist-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-.checklist-group-header {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink-soft);
-  padding: 4px 2px 0;
-  margin-top: 4px;
-}
-.checklist-group-header:first-child { margin-top: 0; }
-.checklist-list li[data-idx] {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 14px;
-}
-.checklist-list li.done { opacity: 0.5; text-decoration: line-through; }
-.checklist-cat-select {
-  flex-shrink: 0;
-  margin-left: auto;
-  padding: 6px 8px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--paper);
-  color: var(--ink-soft);
-  font-family: inherit;
-  font-size: 12px;
-}
-.checklist-list li .del { margin-left: 8px; color: var(--pink-deep); background: none; border: none; font-size: 13px; }
-.checklist-list input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--indigo); }
-.checklist-item-label { display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1; min-width: 0; }
 
-/* ---------- Settings & Backup ---------- */
-.setting-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 14px;
-}
-.switch { position: relative; display: inline-block; width: 46px; height: 27px; flex-shrink: 0; }
-.switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; z-index: 1; }
-.switch-track {
-  position: absolute; inset: 0;
-  background: var(--line);
-  border-radius: 999px;
-  transition: background 0.2s ease;
-}
-.switch-track::before {
-  content: "";
-  position: absolute;
-  top: 3px; left: 3px;
-  width: 21px; height: 21px;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  transition: transform 0.2s ease;
-}
-.switch input:checked + .switch-track { background: var(--indigo); }
-.switch input:checked + .switch-track::before { transform: translateX(19px); }
-.switch input:focus-visible + .switch-track { outline: 2px solid var(--indigo); outline-offset: 2px; }
-
-.hint-text { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 10px; }
-.backup-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.file-btn { display: inline-flex; align-items: center; cursor: pointer; }
-
-/* ---------- Buttons ---------- */
-.btn-primary {
-  background: var(--indigo);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 20px;
+/* ---------- Trip list ---------- */
+.trip-section-title {
+  padding: 20px 20px 8px;
+  font-size: 13px;
   font-weight: 700;
-  font-size: 14px;
-  box-shadow: var(--shadow);
+  color: var(--pink-deep);
+  letter-spacing: 0.12em;
 }
-.btn-primary.small { padding: 10px 16px; font-size: 13px; }
-.btn-ghost {
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 8px 14px;
-  font-size: 12.5px;
-  color: var(--ink-soft);
-}
-.btn-ghost.small { padding: 6px 12px; font-size: 12px; }
-.attach-add { position: relative; }
-
-/* ---------- Bottom nav ---------- */
-.bottom-nav {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  display: flex;
-  background: var(--paper-raised);
-  border-top: 1px solid var(--line);
-  padding: 8px 6px calc(8px + var(--safe-bottom));
-  z-index: 30;
-}
-.nav-btn {
-  flex: 1;
-  background: none;
-  border: none;
+.trip-list {
+  padding: 0 16px 8px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  font-size: 11px;
-  color: var(--ink-soft);
-  padding: 4px 0;
-  border-radius: 10px;
+  gap: 12px;
 }
-.nav-btn .nav-icon { font-size: 19px; }
-.nav-btn.active { color: var(--indigo-deep); font-weight: 700; }
-.nav-btn.active .nav-icon { transform: translateY(-1px); }
-
-/* ---------- Modal ---------- */
-.modal-backdrop, .viewer-backdrop {
-  position: fixed; inset: 0;
-  background: rgba(46,42,38,0.55);
+.trip-card {
   display: flex;
-  align-items: flex-end;
-  z-index: 100;
+  align-items: center;
+  gap: 14px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  text-align: left;
+  width: 100%;
 }
-.viewer-backdrop {
+.trip-card:active { transform: scale(0.98); }
+.trip-emoji {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--tape);
+  display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  padding: calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom));
-  box-sizing: border-box;
+  font-size: 22px;
 }
-.modal-sheet {
-  background: var(--paper);
-  width: 100%;
-  max-width: 640px;
-  margin: 0 auto;
-  border-radius: 22px 22px 0 0;
-  padding: 26px 18px calc(24px + var(--safe-bottom));
-  max-height: 88vh;
-  overflow-y: auto;
-  position: relative;
-  box-shadow: 0 -8px 30px rgba(0,0,0,0.18);
+.trip-info { flex: 1; min-width: 0; }
+.trip-info h3 {
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 3px;
 }
-.modal-sheet.small-sheet { border-radius: 22px; margin: auto; max-height: 100%; overflow-y: auto; }
-.modal-tape {
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-2deg);
-  width: 70px;
-  height: 20px;
-  background: var(--tape);
-  border-radius: 2px;
-  opacity: 0.9;
-}
-.modal-close, .viewer-close {
-  position: absolute;
-  top: 10px; right: 10px;
-  background: rgba(46,42,38,0.08);
-  border: none;
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  font-size: 16px;
-  color: var(--ink-soft);
-  z-index: 10;
-}
-.viewer-close { top: 20px; right: 20px; background: rgba(255,255,255,0.15); color: #fff; }
-.modal-header { padding-right: 30px; }
-.modal-time {
-  display: inline-block;
-  background: var(--indigo);
-  color: #fff;
+.trip-meta {
   font-size: 12px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 20px;
-  margin-bottom: 8px;
+  color: var(--ink-soft);
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
-.modal-header h2 { font-size: 19px; color: var(--indigo-deep); line-height: 1.4; }
-.modal-subtitle { margin: 6px 0 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
-
-.map-link {
-  display: inline-block;
-  margin: 14px 0 4px;
+.trip-arrow {
+  color: var(--ink-soft);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.empty-state {
+  margin: 20px 16px;
+  padding: 24px;
+  text-align: center;
+  color: var(--ink-soft);
   font-size: 13px;
-  color: var(--pink-deep);
+  background: var(--paper-raised);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-card);
+}
+
+.add-trip-btn {
+  margin: 4px 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-card);
+  font-size: 13px;
   font-weight: 700;
   text-decoration: none;
 }
-.field-label {
-  display: block;
-  font-size: 12px;
-  color: var(--ink-soft);
-  margin: 16px 0 6px;
-  font-weight: 700;
+.add-trip-btn:active { transform: scale(0.98); }
+.add-trip-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--tape);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
 }
-#modalNote {
-  width: 100%;
-  border-radius: 12px;
-  border: 1px solid var(--line);
+
+/* ---------- Settings row (dark mode) ---------- */
+.settings-row {
+  margin: 22px 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
   background: var(--paper-raised);
-  color: var(--ink);
-  caret-color: var(--indigo);
-  padding: 10px 12px;
-  font-family: inherit;
-  font-size: 13.5px;
-  resize: vertical;
-}
-#modalNote::placeholder { color: var(--ink-soft); opacity: 1; }
-.attach-section { margin-top: 18px; }
-.attach-head { display: flex; justify-content: space-between; align-items: center; }
-.attach-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 10px;
-}
-.attach-thumb {
-  aspect-ratio: 1;
-  border-radius: 10px;
-  overflow: hidden;
   border: 1px solid var(--line);
-  background: var(--paper-raised);
+  border-radius: var(--radius-card);
+}
+.switch { position: relative; display: inline-block; width: 42px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch-track {
+  position: absolute; inset: 0; background: var(--line); border-radius: 999px; transition: 0.2s;
+}
+.switch-track::before {
+  content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
+  background: #fff; border-radius: 50%; transition: 0.2s; box-shadow: var(--shadow);
+}
+.switch input:checked + .switch-track { background: var(--indigo); }
+.switch input:checked + .switch-track::before { transform: translateX(18px); }
+
+/* ---------- Stat modals (여행 횟수 / 총 여행일수) ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(20, 17, 14, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-box {
   position: relative;
+  width: 100%;
+  max-width: 340px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 22px 20px 20px;
+  box-shadow: 0 16px 40px rgba(20, 17, 14, 0.28);
+}
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-soft);
+  font-size: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.attach-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.attach-thumb .pdf-badge {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--indigo);
-  text-align: center;
-  padding: 4px;
+.modal-close:active { transform: scale(0.92); }
+.modal-close:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
 }
-.attach-thumb .del-attach {
-  position: absolute;
-  top: 3px; right: 3px;
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: rgba(46,42,38,0.55);
-  color: #fff;
-  border: none;
-  font-size: 11px;
-  line-height: 1;
+.modal-title {
+  font-size: 17px;
+  color: var(--indigo-deep);
+  margin: 0 0 16px;
+  padding-right: 26px;
 }
-.close-bottom {
-  display: block;
-  width: 100%;
-  margin-top: 26px;
-  text-align: center;
-}
-/* 사진/PDF 확대보기는 QR·이동방법·일본어 카드 등 다른 팝업 위에서 열려도
-   항상 최상단에 보이도록 z-index를 더 높게 지정 */
-#viewerBackdrop { z-index: 120; }
-.viewer-content { max-width: 92vw; max-height: 82vh; }
-.viewer-content img { max-width: 92vw; max-height: 82vh; border-radius: 10px; display: block; }
-.viewer-content iframe { width: 88vw; height: 82vh; border: 0; border-radius: 10px; background: #fff; }
-
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
-}
-
-/* ---------------- 비고(remark) ---------------- */
-.tl-card p.remark {
-  margin: 4px 0 0;
+.modal-subsection-title {
   font-size: 12px;
+  font-weight: 700;
   color: var(--pink-deep);
-  line-height: 1.5;
+  letter-spacing: 0.08em;
+  margin: 18px 0 10px;
 }
+.modal-subsection-title:first-child { margin-top: 0; }
 
-/* ---------------- 체크리스트 아코디언 ---------------- */
-.accordion {
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow);
+/* 여행 횟수 모달: 연도별 그룹 */
+.year-group { margin-bottom: 16px; }
+.year-group:last-child { margin-bottom: 0; }
+.year-group-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--indigo-deep);
+  margin-bottom: 8px;
+}
+.year-group-title .count-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pink-deep);
+}
+.year-group-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.year-group-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13.5px;
+  color: var(--ink);
+  padding: 8px 10px;
+  background: var(--paper);
+  border-radius: 10px;
+}
+.year-group-list .city-count { color: var(--ink-soft); font-size: 12.5px; }
+
+/* 총 여행일수 모달: CSS 막대그래프 */
+.stat-bar-list { display: flex; flex-direction: column; gap: 10px; }
+.stat-bar-row { display: flex; align-items: center; gap: 10px; }
+.stat-bar-label {
+  width: 60px;
+  flex-shrink: 0;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.stat-bar-track {
+  display: block;
+  flex: 1;
+  height: 10px;
+  background: var(--line);
+  border-radius: 999px;
   overflow: hidden;
 }
-.accordion + .accordion { margin-top: 14px; }
-.accordion summary {
-  list-style: none;
-  padding: 14px 16px;
-  font-family: 'Shippori Mincho', serif;
-  font-weight: 700;
-  color: var(--indigo-deep);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.stat-bar-fill {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: 999px;
+  background: var(--indigo);
+  transition: width 0.3s ease;
 }
-.accordion summary::-webkit-details-marker { display: none; }
-.accordion summary::after {
-  content: "▾";
+.stat-bar-fill.season { background: var(--pink); }
+.stat-bar-value {
+  width: 34px;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 12px;
   color: var(--ink-soft);
-  transition: transform .15s ease;
 }
-.accordion[open] summary::after { transform: rotate(180deg); }
-.accordion-body { padding: 0 16px 16px; }
-
-.ref-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-.ref-list li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 13.5px;
+.modal-empty {
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-align: center;
+  padding: 12px 0;
 }
-
-/* ---------------- 이동방법 카드 팝업 ---------------- */
-.transit-card { max-width: 640px; }
-.transit-body h3 {
-  font-size: 15px;
-  color: var(--indigo-deep);
-  margin: 18px 0 8px;
-}
-.transit-body h3:first-child, #transitCardBody h3:first-child { margin-top: 6px; }
-.transit-body ul {
-  margin: 0 0 10px;
-  padding-left: 20px;
-  font-size: 13.5px;
-  line-height: 1.7;
-  color: var(--ink);
-}
-.transit-body .pay-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--pink-deep);
-  margin: 4px 0 4px;
-}
-.washi-divider {
-  border: none;
-  height: 2px;
-  margin: 18px 0;
-  background: repeating-linear-gradient(90deg, var(--tape) 0 8px, transparent 8px 14px);
-  opacity: 0.7;
-}
-
-/* ---------------- Visit Japan Web QR 카드 ---------------- */
-.qr-card { max-width: 480px; }
-.qr-body .attach-section { margin-top: 4px; }
-.qr-body .hint-text { margin-top: 10px; font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
-
-/* ---------------- 자주쓰는 일본어 카드 ---------------- */
-.phrase-card { max-width: 560px; }
-.phrase-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 4px; }
-.phrase-table th,
-.phrase-table td {
-  border-bottom: 1px solid var(--line);
-  padding: 9px 8px;
-  text-align: left;
-  vertical-align: top;
-  line-height: 1.5;
-}
-.phrase-table th {
-  font-family: 'Shippori Mincho', serif;
-  color: var(--indigo-deep);
-  font-weight: 700;
-  font-size: 12.5px;
-  border-bottom: 2px solid var(--indigo-deep);
-}
-.phrase-table td:nth-child(2) { color: var(--indigo-deep); }
-.phrase-table td:nth-child(3) { color: var(--pink-deep); }
-.phrase-table tr:last-child td { border-bottom: none; }
-
-/* ---------------- Visit Japan Web 고정 퀵카드 (준비물 아래) ---------------- */
-.quick-card {
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow);
-  padding: 14px 16px;
-}
-.quick-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
-.quick-card-title { font-family: 'Shippori Mincho', serif; font-weight: 700; color: var(--indigo-deep); font-size: 14.5px; }
-.quick-card .hint-text { margin: 0; }
-
-/* ---------------- 참고정보: 쇼핑리스트 / 꼭 먹어야 할 음식 (그룹 리스트 공용) ---------------- */
-.shopping-card, .food-card { max-width: 560px; }
-.group-body h3 { font-size: 15px; color: var(--indigo-deep); margin: 18px 0 8px; }
-.group-body h3:first-child { margin-top: 6px; }
-.item-list { list-style: none; margin: 0 0 4px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.item-list li { display: flex; align-items: flex-start; gap: 10px; border-bottom: 1px dashed var(--line); padding-bottom: 8px; }
-.item-list li:last-child { border-bottom: none; padding-bottom: 0; }
-.item-content { flex: 1; min-width: 0; }
-.item-line { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.item-title { font-weight: 700; font-size: 14px; color: var(--ink); }
-.item-desc { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
-.map-link-inline { margin: 0; font-size: 15px; flex-shrink: 0; text-decoration: none; }
-
-/* ---------------- 참고정보: 쇼핑 추천 매장 (표) ---------------- */
-.store-card { max-width: 640px; }
-.store-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 4px; }
-.store-table th,
-.store-table td {
-  border-bottom: 1px solid var(--line);
-  padding: 9px 8px;
-  text-align: left;
-  vertical-align: top;
-  line-height: 1.5;
-}
-.store-table th {
-  font-family: 'Shippori Mincho', serif;
-  color: var(--indigo-deep);
-  font-weight: 700;
-  font-size: 12.5px;
-  border-bottom: 2px solid var(--indigo-deep);
-}
-.store-table tr:last-child td { border-bottom: none; }
-.store-name-cell { display: flex; align-items: center; gap: 8px; }
-
-/* 좁은 화면에서는 표 대신 카드형(세로) 레이아웃으로 자동 전환 */
-@media (max-width: 480px) {
-  .store-table, .store-table thead, .store-table tbody,
-  .store-table th, .store-table td, .store-table tr { display: block; }
-  .store-table thead { display: none; }
-  .store-table tr {
-    margin-bottom: 10px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 10px 12px;
-    background: var(--paper-raised);
-  }
-  .store-table tr:last-child { margin-bottom: 0; }
-  .store-table td { border-bottom: none; padding: 4px 0; }
-  .store-table td::before {
-    content: attr(data-label);
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--ink-soft);
-    margin-bottom: 2px;
-  }
-}
-
-/* ---------------- 자주쓰는 일본어 카드: 카테고리 구분 헤더 행 ---------------- */
-.expense-total { font-family: 'Shippori Mincho', serif; font-weight: 700; color: var(--indigo-deep); font-size: 15.5px; }
-#expenseAccordion .quick-card + .quick-card { margin-top: 10px; }
-#expenseAccordion #expenseDetailBtn { margin-top: 12px; width: 100%; }
-.expense-badge {
-  display: inline-block; padding: 2px 8px; border-radius: 999px;
-  font-size: 12px; font-weight: 600; white-space: nowrap;
-}
-.expense-badge-shared { background: color-mix(in srgb, var(--indigo) 18%, transparent); color: var(--indigo-deep); }
-.expense-badge-personal { background: color-mix(in srgb, var(--pink) 20%, transparent); color: var(--pink-deep); }
-.expense-share-note { font-size: 11.5px; color: var(--ink-soft); }
-.accordion-nested {
-  box-shadow: none;
-  border-radius: 12px;
-  margin-top: 8px;
-}
-.accordion-nested summary {
-  padding: 10px 12px;
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 13.5px;
-  display: flex;
-  justify-content: space-between;
-}
-.expense-cat-total { color: var(--indigo-deep); font-weight: 700; text-align: right; }
-.expense-currency-note { font-size: 11px; font-weight: 500; color: var(--ink-soft); }
-.accordion-nested .accordion-body { padding: 0 12px 12px; }
-.expense-table.phrase-table td { padding: 8px; }
-
-.phrase-table tr.phrase-cat td {
-  background: var(--paper-raised);
-  font-family: 'Shippori Mincho', serif;
-  font-weight: 700;
-  color: var(--indigo-deep);
-  font-size: 12px;
-  padding: 8px 8px 6px;
-  border-bottom: 1px solid var(--line);
-}
-.phrase-table tr.phrase-cat:first-child td { padding-top: 0; }
 
 /* ---------- 서비스워커 업데이트 토스트 ---------- */
 .sw-update-toast {
   position: fixed;
   left: 16px;
   right: 16px;
-  bottom: calc(64px + var(--safe-bottom));
-  z-index: 1500; /* 모달/뷰어보다도 위, 항상 눈에 띄어야 함 */
+  bottom: calc(16px + var(--safe-bottom));
+  z-index: 1500;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -963,82 +451,3 @@ main { padding: 18px 16px 8px; max-width: 640px; margin: 0 auto; }
   font-size: 13px;
   font-weight: 600;
 }
-
-/* ---------- 안드로이드 "앱 설치" 배너 ---------- */
-.install-banner {
-  position: fixed;
-  left: 16px;
-  right: 16px;
-  bottom: calc(64px + var(--safe-bottom));
-  z-index: 1500;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  background: var(--ink);
-  color: var(--paper-raised);
-  border-radius: 14px;
-  padding: 12px 12px 12px 16px;
-  font-size: 13.5px;
-  box-shadow: var(--shadow);
-}
-.install-banner-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-.install-banner-actions #installBannerDismiss {
-  background: none;
-  border: none;
-  color: var(--paper-raised);
-  opacity: 0.7;
-  font-size: 15px;
-  line-height: 1;
-  padding: 6px;
-}
-.install-banner-actions #installBannerBtn {
-  background: var(--paper-raised);
-  color: var(--ink);
-  border: none;
-  border-radius: 999px;
-  padding: 7px 14px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-
-/* ---------------- 가계부 입력폼 / 행 액션 / 설정 텍스트 입력 ---------------- */
-.expense-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-.expense-form .span2 { grid-column: 1 / -1; }
-.expense-form input, .expense-form select {
-  min-width: 0; padding: 12px 12px; border-radius: 12px; border: 1px solid var(--line);
-  background: var(--paper-raised); color: var(--ink); caret-color: var(--indigo);
-  font-family: inherit; font-size: 14px;
-}
-.expense-form input::placeholder { color: var(--ink-soft); opacity: 1; }
-.expense-form-actions { grid-column: 1 / -1; display: flex; gap: 8px; }
-.expense-form-actions .btn-primary { flex: 1; }
-.expense-actions { white-space: nowrap; text-align: right; }
-.expense-act { border: none; background: none; font-size: 15px; padding: 4px 5px; cursor: pointer; }
-.setting-text {
-  width: 120px; min-width: 0; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line);
-  background: var(--paper-raised); color: var(--ink); font-family: inherit; font-size: 14px;
-}
-#expenseCsvMode {
-  padding: 6px 10px; border-radius: 12px; border: 1px solid var(--line);
-  background: var(--paper-raised); color: var(--ink); font-family: inherit; font-size: 12px;
-}
-
-.rate-cell { display: flex; gap: 6px; min-width: 0; }
-.rate-cell input { flex: 1; min-width: 0; }
-.rate-cell .btn-ghost { flex-shrink: 0; }
-#expRateNote { margin: -2px 0 0; font-size: 11.5px; line-height: 1.5; }
-#expRateNote a { color: inherit; text-decoration: underline; }
-
-.cat-cell { display: flex; gap: 6px; min-width: 0; }
-.cat-cell input { flex: 1; min-width: 0; }
-.cat-cell select { flex: 0 0 82px; min-width: 0; padding-left: 8px; padding-right: 4px; }
-
-.expense-others { opacity: 0.85; }
-.expense-badge-others { background: color-mix(in srgb, var(--ink-soft) 18%, transparent); color: var(--ink-soft); }
