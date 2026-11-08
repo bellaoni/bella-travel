@@ -3,68 +3,410 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Bella Travel</title>
+<title>Key of Rich in Bali</title>
 <meta name="theme-color" id="themeColorMeta" content="#3D5A6C">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Bella Travel">
 <script>
 (function () {
+  // 이 여행 앱을 다른 여행 복사본과 구분하는 유일한 값. 새 여행을 만들 때는 이 한 줄만 바꾸면
+  // IndexedDB 이름(db.js) · 테마/아코디언 localStorage 키 · 백업파일 식별자(app.js)가 전부
+  // 자동으로 따라 바뀐다 (같은 GitHub Pages 도메인 안에서 여행끼리 데이터가 섞이는 것을 방지).
+  window.TRIP_ID = "bali-trip";
   try {
-    if (localStorage.getItem("bella-travel-theme") === "dark") {
+    if (localStorage.getItem(window.TRIP_ID + "-theme") === "dark") {
       document.documentElement.setAttribute("data-theme", "dark");
     }
   } catch (e) {}
 })();
 </script>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="발리">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="hero">
-  <div class="hero-mark" aria-hidden="true"><img src="icon-512.png" alt=""></div>
-  <h1>Bella Travel</h1>
-  <p class="tagline">나의 여행 다이어리 아카이브</p>
+<header class="app-header">
+  <div class="header-top">
+    <button class="home-btn" id="homeBtn" type="button" aria-label="Bella Travel로 돌아가기" hidden>
+      <span aria-hidden="true">←</span>
+    </button>
+    <div class="title-block">
+      <p class="eyebrow">2026.11.10 – 11.14</p>
+      <h1>Key of Rich in Bali</h1>
+    </div>
+    <img class="header-mark" src="icon-192.png" alt="" aria-hidden="true">
+  </div>
 </header>
 
-<section class="stats-strip" id="statsStrip"></section>
+<main id="mainViews">
 
-<nav class="year-filter" id="yearFilter"></nav>
+  <section id="view-timeline" class="view active">
+    <nav class="day-tabs" id="dayTabs"></nav>
+    <div class="timeline" id="timeline"></div>
+  </section>
 
-<p class="trip-section-title" id="listTitle">여행 목록</p>
-<div class="trip-list" id="tripList"></div>
+  <section id="view-map" class="view">
+    <div class="map-panel">
+      <nav class="map-day-filter" id="mapDayFilter"></nav>
+      <div class="map-legend" id="mapLegend"></div>
+      <div class="map-offline-bar">
+        <button class="btn-ghost small" id="offlineMapBtn" type="button">📥 오프라인 지도 받기</button>
+        <button class="btn-ghost small" id="offlineMapRedoBtn" type="button" hidden>🔄 다시 받기</button>
+        <button class="btn-ghost small" id="offlineMapCancelBtn" type="button" hidden>취소</button>
+      </div>
+      <p class="hint-text" id="offlineMapStatus" hidden></p>
+      <div class="map-embed-wrap">
+        <div id="leafletMap"></div>
+        <div class="map-picker-bar" id="mapPickerBar" hidden>
+          <span id="mapPickerText"></span>
+          <div class="map-picker-actions">
+            <button class="btn-ghost small" id="mapPickerCancel" type="button">취소</button>
+            <button class="btn-primary small" id="mapPickerSave" type="button" disabled>저장</button>
+          </div>
+        </div>
+        <div class="map-bottom-sheet" id="mapSheet"></div>
+      </div>
+      <div class="map-pending" id="mapPending" hidden>
+        <p class="hint-text">📍 자동으로 위치를 찾지 못한 장소예요. "지도에서 위치 찍기"를 눌러 지도를 탭해 정확한 위치를 저장해주세요.</p>
+        <ul class="map-pending-list" id="mapPendingList"></ul>
+      </div>
+    </div>
+  </section>
 
-<a class="add-trip-btn" href="./scaffold.html">
-  <span class="add-trip-icon" aria-hidden="true">+</span>
-  <span>새 여행 만들기</span>
-</a>
+  <section id="view-book" class="view">
+    <div class="book-panel" id="bookPanel"></div>
+  </section>
 
-<div class="settings-row">
-  <span>다크 모드</span>
-  <label class="switch">
-    <input type="checkbox" id="darkModeToggle">
-    <span class="switch-track" aria-hidden="true"></span>
-  </label>
-</div>
+  <section id="view-checklist" class="view">
+    <div class="checklist-panel">
 
-<!-- 통계 카드 4종(여행횟수/방문국가/방문도시/총여행일수) 공용 모달.
-     내용만 갈아끼우는 방식이라 항상 같은 UX/디자인으로 통일됩니다. -->
-<div class="modal-overlay" id="statModalBackdrop" hidden>
-  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="statModalTitle">
-    <button class="modal-close" id="statModalClose" type="button" aria-label="닫기">✕</button>
-    <h2 class="modal-title" id="statModalTitle"></h2>
-    <div class="modal-content" id="statModalContent"></div>
+      <details class="accordion" id="checklistAccordion">
+        <summary>준비물</summary>
+        <div class="accordion-body">
+          <form id="checklistForm" class="checklist-add">
+            <input type="text" id="checklistInput" placeholder="예: 여권, 트래블월렛 충전, 우산" autocomplete="off">
+            <select id="checklistCategoryInput" aria-label="카테고리 선택">
+              <!-- 옵션은 app.js가 data.js의 CHECKLIST_CATEGORIES 기준으로 렌더링(단일 소스, B1) -->
+            </select>
+            <button type="submit" class="btn-primary small">추가</button>
+          </form>
+          <div class="checklist-filter" id="checklistFilter" role="tablist" aria-label="카테고리 필터보기"></div>
+          <ul class="checklist-list" id="checklistList"></ul>
+        </div>
+      </details>
+
+      <div class="quick-card" id="qrQuickCard">
+        <div class="quick-card-head">
+          <span class="quick-card-title">📱 Visit Japan Web</span>
+          <button class="btn-ghost small" id="qrQuickBtn" type="button">보기</button>
+        </div>
+        <p class="hint-text">입국 전 미리 작성해두면 공항에서 QR로 빠르게 통과할 수 있어요.</p>
+      </div>
+
+      <details class="accordion" id="refAccordion">
+        <summary>참고정보</summary>
+        <div class="accordion-body">
+          <ul class="ref-list" id="refList"></ul>
+        </div>
+      </details>
+
+      <details class="accordion" id="expenseAccordion" hidden>
+        <summary>💰 가계부</summary>
+        <div class="accordion-body">
+          <p class="hint-text" id="expenseNameHint" hidden>⚠️ 설정에서 "내 이름"을 먼저 입력해야 개인경비가 집계돼요.</p>
+          <form id="expenseForm" class="expense-form" autocomplete="off">
+            <input type="text" id="expItem" class="span2" placeholder="항목명 (예: 라멘)" required>
+            <input type="number" id="expAmount" inputmode="decimal" step="any" min="0" placeholder="금액" required>
+            <select id="expCurrency" aria-label="통화"></select>
+            <div class="rate-cell"><input type="number" id="expRate" inputmode="decimal" step="any" min="0" placeholder="1통화당 원화"><button type="button" class="btn-ghost small" id="expRateFetch" title="최신 환율 불러오기">조회</button></div>
+            <select id="expDay" aria-label="일차"></select>
+            <p class="hint-text span2" id="expRateNote" hidden></p>
+            <div class="cat-cell">
+              <input type="text" id="expCategory" placeholder="카테고리 (직접 입력)" autocomplete="off">
+              <select id="expCategorySel" aria-label="카테고리 목록에서 선택"></select>
+            </div>
+            <input type="text" id="expSplitWith" placeholder="함께 나눌 사람 (쉼표 구분, 비우면 나 혼자)">
+            <div class="expense-form-actions">
+              <button type="submit" class="btn-primary small" id="expSubmitBtn">추가</button>
+              <button type="button" class="btn-ghost small" id="expCancelBtn" hidden>수정 취소</button>
+            </div>
+          </form>
+          <div class="quick-card" id="expenseSharedCard">
+            <div class="quick-card-head">
+              <span class="quick-card-title">공동경비 총액</span>
+              <span class="expense-total" id="expenseSharedTotal">-</span>
+            </div>
+            <p class="hint-text">나눠 쓴 항목의 전체 금액이에요 (인원수로 나누기 전).</p>
+          </div>
+          <div class="quick-card" id="expenseSummaryCard">
+            <div class="quick-card-head">
+              <span class="quick-card-title">총 내 지출액</span>
+              <span class="expense-total" id="expenseTotal">-</span>
+            </div>
+            <p class="hint-text">개인경비 전액 + 공동경비 내 몫을 더한 금액이에요.</p>
+          </div>
+          <button class="btn-ghost small" id="expenseDetailBtn" type="button">상세보기</button>
+        </div>
+      </details>
+
+      <details class="accordion" id="settingsAccordion">
+        <summary>설정</summary>
+        <div class="accordion-body">
+          <div class="setting-row">
+            <span>다크 모드</span>
+            <label class="switch">
+              <input type="checkbox" id="darkModeToggle">
+              <span class="switch-track" aria-hidden="true"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <span>가계부 사용</span>
+            <label class="switch">
+              <input type="checkbox" id="expenseToggle">
+              <span class="switch-track" aria-hidden="true"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <span>내 이름 (가계부)</span>
+            <input type="text" id="meNameInput" class="setting-text" placeholder="예: 나" maxlength="20">
+          </div>
+          <p class="hint-text">가계부와 내 이름은 이 기기에만 저장돼요. 공유 링크로 들어온 동행자는 기본으로 꺼져 있어요.</p>
+        </div>
+      </details>
+
+      <details class="accordion" id="backupAccordion">
+        <summary>데이터 백업</summary>
+        <div class="accordion-body">
+          <p class="hint-text">사진 · 메모 · 체크리스트 · 가계부 내역을 파일 하나로 저장하거나 불러올 수 있어요. 기기를 바꾸거나 앱을 지우기 전에 내보내기 해두는 걸 추천해요.</p>
+          <div class="backup-actions">
+            <button class="btn-primary small" id="exportBtn" type="button">내보내기</button>
+            <label class="btn-ghost small file-btn" for="importFileInput">
+              가져오기
+              <input type="file" id="importFileInput" accept="application/json" hidden>
+            </label>
+          </div>
+          <p class="hint-text" id="backupStatus" hidden></p>
+
+          <div id="expenseCsvSection" hidden>
+            <div class="washi-divider"></div>
+            <p class="hint-text">가계부 내역을 CSV로 내보내거나 가져올 수 있어요. 컬럼: day(일차),item(항목명),amount(금액)는 필수, category(카테고리),currency(통화),krwRate(통화 당 원화),splitWith(나눠 낼 사람 — 쉼표나 세미콜론 구분)는 비워도 돼요(통화는 원화·나 혼자로 처리). 그 외 컬럼은 무시돼요.</p>
+            <div class="backup-actions">
+              <select id="expenseCsvMode" aria-label="가져오기 방식">
+                <option value="append">기존 내역에 추가</option>
+                <option value="replace">전체 교체</option>
+              </select>
+              <label class="btn-ghost small file-btn" for="expenseCsvInput">
+                CSV 가져오기
+                <input type="file" id="expenseCsvInput" accept=".csv,text/csv" hidden>
+              </label>
+              <button class="btn-ghost small" id="expenseCsvExportBtn" type="button">CSV 내보내기</button>
+              <button class="btn-ghost small" id="expenseUndoBtn" type="button" hidden>이전으로 되돌리기</button>
+            </div>
+            <p class="hint-text" id="expenseCsvStatus" hidden></p>
+          </div>
+
+          <div id="geoCopySection" hidden>
+            <div class="washi-divider"></div>
+            <p class="hint-text">지도에서 새로 자동 확인되거나 수동 입력한 좌표를 코드에 그대로 붙여넣을 수 있는 형태로 복사해요. 복사한 내용은 이 여행의 data.js 파일과 함께 새 대화에서 Claude에게 보내며 "GEO_COORDS에 추가해줘"라고 요청하면 반영해줘요 — 받은 data.js를 GitHub 레포에 재업로드하면 모든 기기에서 공유돼요.</p>
+            <div class="backup-actions">
+              <button class="btn-ghost small" id="exportGeoBtn" type="button">지도 좌표 복사</button>
+            </div>
+            <p class="hint-text" id="geoExportStatus" hidden></p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+</main>
+
+<nav class="bottom-nav" id="bottomNav">
+  <button class="nav-btn active" data-view="timeline">
+    <span class="nav-icon" aria-hidden="true">🗓️</span><span>일정</span>
+  </button>
+  <button class="nav-btn" data-view="map">
+    <span class="nav-icon" aria-hidden="true">📍</span><span>지도</span>
+  </button>
+  <button class="nav-btn" data-view="book">
+    <span class="nav-icon" aria-hidden="true">🎫</span><span>예약</span>
+  </button>
+  <button class="nav-btn" data-view="checklist">
+    <span class="nav-icon" aria-hidden="true">✅</span><span>체크리스트</span>
+  </button>
+</nav>
+
+<!-- 상세 모달 -->
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <div class="modal-sheet" id="modalSheet" role="dialog" aria-modal="true">
+    <div class="modal-tape"></div>
+    <button class="modal-close" id="modalClose" aria-label="닫기">✕</button>
+    <div class="modal-header">
+      <span class="modal-time" id="modalTime"></span>
+      <h2 id="modalTitle"></h2>
+      <p class="modal-subtitle" id="modalSubtitle"></p>
+    </div>
+    <div class="modal-body">
+      <a class="map-link" id="modalMapLink" target="_blank" rel="noopener">📍 구글 지도에서 위치 보기</a>
+
+      <label class="field-label" for="modalNote">메모 (이동방법 · 비용 · 시간 · 팁)</label>
+      <textarea id="modalNote" rows="4" placeholder="예: 이동수단, 소요시간, 요금 등"></textarea>
+
+      <div class="attach-section">
+        <div class="attach-head">
+          <span class="field-label">첨부 (사진 · 캡처 · PDF)</span>
+          <label class="btn-ghost small attach-add">
+            + 추가
+            <input type="file" id="modalFileInput" accept="image/*,application/pdf" multiple hidden>
+          </label>
+        </div>
+        <div class="attach-grid" id="modalAttachGrid"></div>
+      </div>
+      <button class="btn-primary close-bottom" id="modalCloseBottom" type="button">닫기</button>
+    </div>
   </div>
 </div>
 
-<script src="trips-registry.js"></script>
+<!-- 첨부파일 뷰어 팝업 -->
+<div class="viewer-backdrop" id="viewerBackdrop" hidden>
+  <button class="viewer-close" id="viewerClose" aria-label="닫기">✕</button>
+  <div class="viewer-content" id="viewerContent"></div>
+</div>
+
+<!-- 공항↔시내 이동방법 카드 팝업 (내용은 data.js의 TRANSIT_INFO에서 렌더링) -->
+<div class="viewer-backdrop" id="transitCardBackdrop" hidden>
+  <div class="modal-sheet small-sheet transit-card">
+    <button class="modal-close" id="transitCardClose" aria-label="닫기">✕</button>
+    <div class="modal-header" id="transitCardHeader"></div>
+    <div class="modal-body transit-body">
+      <div id="transitCardBody"></div>
+      <button class="btn-primary close-bottom" id="transitCardCloseBottom" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- Visit Japan Web QR 카드 팝업 -->
+<div class="viewer-backdrop" id="qrCardBackdrop" hidden>
+  <div class="modal-sheet small-sheet qr-card">
+    <button class="modal-close" id="qrCardClose" aria-label="닫기">✕</button>
+    <div class="modal-header">
+      <h2>📱 Visit Japan Web QR</h2>
+      <p class="modal-subtitle">각자 본인 QR 캡처본을 올려두면 입국 심사 때 바로 꺼내볼 수 있어요</p>
+    </div>
+    <div class="modal-body qr-body">
+      <div class="attach-section">
+        <div class="attach-head">
+          <span class="field-label">QR 캡처 사진</span>
+          <label class="btn-ghost small attach-add">
+            + 추가
+            <input type="file" id="qrFileInput" accept="image/*" multiple hidden>
+          </label>
+        </div>
+        <div class="attach-grid" id="qrAttachGrid"></div>
+        <p class="hint-text">사진은 이 기기에만 저장돼요. 각자 본인 것을 각자 기기에 업로드해주세요.</p>
+      </div>
+      <button class="btn-primary close-bottom" id="qrCardCloseBottom" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 자주쓰는 일본어 카드 팝업 -->
+<div class="viewer-backdrop" id="phraseCardBackdrop" hidden>
+  <div class="modal-sheet small-sheet phrase-card">
+    <button class="modal-close" id="phraseCardClose" aria-label="닫기">✕</button>
+    <div class="modal-header">
+      <h2>🗣️ 자주쓰는 일본어</h2>
+    </div>
+    <div class="modal-body phrase-body">
+      <table class="phrase-table" id="phraseTable">
+        <thead>
+          <tr><th>한국어</th><th>일본어</th><th>발음</th></tr>
+        </thead>
+        <tbody id="phraseTableBody"></tbody>
+      </table>
+      <button class="btn-primary close-bottom" id="phraseCardCloseBottom" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 쇼핑 추천 매장 카드 팝업 -->
+<div class="viewer-backdrop" id="storeCardBackdrop" hidden>
+  <div class="modal-sheet small-sheet store-card">
+    <button class="modal-close" id="storeCardClose" aria-label="닫기">✕</button>
+    <div class="modal-header">
+      <h2>🛍️ 쇼핑 추천 매장</h2>
+    </div>
+    <div class="modal-body store-body">
+      <table class="store-table" id="storeTable">
+        <thead>
+          <tr><th>매장</th><th>위치</th><th>영업시간</th><th>추천 상품</th></tr>
+        </thead>
+        <tbody id="storeTableBody"></tbody>
+      </table>
+      <button class="btn-primary close-bottom" id="storeCardCloseBottom" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 가계부 상세 카드 팝업 (이 기기에서 가계부를 켠 경우에만 열 수 있음) -->
+<div class="viewer-backdrop" id="expenseCardBackdrop" hidden>
+  <div class="modal-sheet small-sheet store-card">
+    <button class="modal-close" id="expenseCardClose" aria-label="닫기">✕</button>
+    <div class="modal-header">
+      <h2>💰 가계부</h2>
+    </div>
+    <div class="modal-body store-body">
+      <div id="expenseCategoryList"></div>
+      <button class="btn-primary close-bottom" id="expenseCardCloseBottom" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 쇼핑리스트 카드 팝업 -->
+<div class="viewer-backdrop" id="shoppingCardBackdrop" hidden>
+  <div class="modal-sheet small-sheet shopping-card">
+    <button class="modal-close" id="shoppingCardClose" aria-label="닫기">✕</button>
+    <div class="modal-header">
+      <h2>🛒 쇼핑리스트</h2>
+    </div>
+    <div class="modal-body group-body">
+      <div id="shoppingListBody"></div>
+      <button class="btn-primary close-bottom" id="shoppingCardCloseBottom" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 꼭 먹어야 할 음식 카드 팝업 -->
+<div class="viewer-backdrop" id="foodCardBackdrop" hidden>
+  <div class="modal-sheet small-sheet food-card">
+    <button class="modal-close" id="foodCardClose" aria-label="닫기">✕</button>
+    <div class="modal-header">
+      <h2>🍜 꼭 먹어야 할 음식</h2>
+    </div>
+    <div class="modal-body group-body">
+      <div id="foodListBody"></div>
+      <button class="btn-primary close-bottom" id="foodCardCloseBottom" type="button">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="db.js"></script>
+<script src="data.js"></script>
 <script src="shared-core/theme.js"></script>
 <script src="shared-core/popup.js"></script>
+<script src="shared-core/attachments.js"></script>
+<script src="shared-core/backup.js"></script>
+<script src="shared-core/entry-source.js"></script>
+<script src="shared-core/sw-lifecycle.js"></script>
+<script src="shared-core/offline-tiles.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
